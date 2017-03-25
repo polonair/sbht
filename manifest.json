@@ -1,0 +1,19 @@
+{
+	"manifest_version": 2,
+	"name": "SMMBox Mass Planner",
+	"version": "0.3",
+	"permissions": [
+		"tabs",
+		"bookmarks",
+		"https://smmbox.com/",
+		"unlimitedStorage"
+	],
+	"content_scripts": [
+		{
+			"matches": [ "https://smmbox.com/findcontent/*" ],
+			"js": [ 
+				"js/jquery-3.2.0.min.js", "js/grabber2.js"
+			]
+		}
+	]
+}
