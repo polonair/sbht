@@ -10,6 +10,9 @@ $(document).ready(function(){
 	var donor_group;
 	var post_on;
 	var state = 0;
+	var VERSION = "ver. 0.3.5";
+	var min_sec = 3;
+	var max_sec = 7;
 
 	var randomInteger = function(min, max) {
     	var rand = min - 0.5 + Math.random() * (max - min + 1)
@@ -34,7 +37,7 @@ $(document).ready(function(){
 		current_post++;
 		uiUpdate();
 		if (current_post < posts.length && state == 1) {
-			setTimeout(function(){ forEachPost(); }, randomInteger(10, 30)*1000);
+			setTimeout(function(){ forEachPost(); }, randomInteger(min_sec, max_sec)*1000);
 		}
 		else{
 			state = 0;
@@ -75,14 +78,7 @@ $(document).ready(function(){
 		$(data.media_topics[0].media).each(function(index, media){
 			if (media.type == "text")
 			{
-				posting.Global_arrayAttachmentsOrig.push([
-					null, 
-					null, 
-					null, 
-					"text", 
-					null, 
-					null, 
-					media.text]);
+				posting.Global_arrayAttachmentsOrig.push([null, null, null, "text", null, null, media.text]);
 			}
 			else if (media.type == "photo")
 			{
@@ -92,15 +88,21 @@ $(document).ready(function(){
 					{
 						if (data.entities.group_photos[i].ref == media.photo_refs[j])
 						{
-							posting.Global_arrayAttachmentsOrig.push([
-								data.entities.group_photos[i].ref, 
-								null, 
-								data.entities.group_photos[i].pic_max, 
-								"photo", 
-								0, 
-								data.entities.group_photos[i].pic128x128, 
-								data.entities.group_photos[i].standard_width+"x"+data.entities.group_photos[i].standard_height, 
-								data.entities.group_photos[i].pic_max]);
+							var big = null;
+							var small = null;
+							small = data.entities.group_photos[i].pic128x128;
+							if ("picgif" in data.entities.group_photos[i])
+							{
+								big = data.entities.group_photos[i].picgif;
+							}
+							else
+							{
+								big = data.entities.group_photos[i].pic_max;								
+							}
+							var size = data.entities.group_photos[i].standard_width+"x"+data.entities.group_photos[i].standard_height;
+							var ref = data.entities.group_photos[i].ref;
+
+							posting.Global_arrayAttachmentsOrig.push([ref, null, big, "photo", 0, small, size, big]);
 							break;
 						}
 					}
@@ -120,7 +122,7 @@ $(document).ready(function(){
 		donor_post = $(post_data).attr("data-post_id");
 		donor_group = $(post_data).attr("data-owner_id");
 		scheduleNext();
-		post_on = last_scheduled.getTime()/1000;
+		post_on = Math.round(last_scheduled.getTime()/1000);
 		console.log("found post id = ", donor_post);
 		$.ajax({
 			method: "POST",
@@ -129,12 +131,17 @@ $(document).ready(function(){
 				topic_ids: donor_post, 
 				fields: "feed.*,media_topic.*,group_photo.*,video.*,music_track.*,poll.*,place.*,group.*,user.*"
 			},
-		}).done( function(data){ setTimeout(function(){ getTopicDone(data); }, randomInteger(10, 30)*1000); });
+		}).done( function(data){ setTimeout(function(){ getTopicDone(data); }, randomInteger(min_sec, max_sec)*1000); });
 	};
 	var getScheduleDone = function(data){
 		schedule = JSON.parse(data);
 		console.log(schedule);
-		last_scheduled = new Date(1000 * schedule.autoposting[0].date_list[schedule.autoposting[0].date_list.length - 1]);
+		last_scheduled = new Date();
+		if (schedule.autoposting[0].date_list.length > 0)
+		{
+			last_scheduled = new Date(1000 * Math.max.apply(Math, schedule.autoposting[0].date_list));
+			//last_scheduled = new Date(1000 * schedule.autoposting[0].date_list[schedule.autoposting[0].date_list.length - 1]);
+		}
 		for(i = 0; i < schedule.calendar.length; i++)
 		{
 			if (last_scheduled.getHours() == schedule.calendar[i][0] && last_scheduled.getMinutes() == schedule.calendar[i][1])
@@ -203,6 +210,7 @@ $(document).ready(function(){
 		var select = $("<select/>");
 		var span = $("<span/>");
 		var span2 = $("<span/>");
+		var span3 = $("<span/>");
 
 		button
 			.attr("id", "grabb")
@@ -229,6 +237,11 @@ $(document).ready(function(){
 			.attr("id", "grabb_info")
 	    	.css("display", "none")
 	    	.text("Выполнено: ");
+
+		span3
+	    	.css("color", "darkgray")
+	    	.css("font-size", "1rem")
+	    	.text(VERSION);
 
 		input
 			.attr("id", "post_to")
@@ -257,7 +270,8 @@ $(document).ready(function(){
 	    	.append(select)
 	    	.append(button)
 	    	.append(button2)
-	    	.append(span2);
+	    	.append(span2)
+	    	.append(span3);
 
 	    $.ajax({
 	    	method:"get",

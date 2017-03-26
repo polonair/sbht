@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "SMMBox Mass Planner",
-	"version": "0.3",
+	"version": "0.3.5",
 	"permissions": [
 		"tabs",
 		"bookmarks",
