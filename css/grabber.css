@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&subset=cyrillic,cyrillic-ext,latin-ext');
+@import url('https://use.fontawesome.com/4df377b863.css');
+
+.findcontent-page #scan_filter .checkboxs.checked3 label b { z-index: 0 !important; }
+
+div#smbht{
+    font-family: 'Open Sans';
+    font-size: 16px;
+    display: flex;
+    position: fixed;
+    width: 32px;
+    height: 100%;
+    top: 0;
+    right: 0;
+    transition: width 0.4s cubic-bezier(1, 0, 0, 1) 0s;
+}
+div#smbht.opened{
+    width: 640px;
+}
+div#smbht > div#grabb_panel{
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 640px;
+    top: 5em;
+    right: auto;
+    left: 0;
+}
+div#smbht > div#grabb_panel > div.label{
+    display: block;
+    font: normal normal normal 1.5em/1 FontAwesome;
+    border-bottom: 1px solid darkgray;
+    border-left: 1px solid darkgray;
+    border-top: 1px solid darkgray;
+    padding: 0.2em;
+    border-radius: inherit;
+    border-top-left-radius: 0.3em;
+    border-bottom-left-radius: 0.3em;
+    margin-right: -1px;
+    background-color: white;
+    z-index: 101;
+    cursor: pointer;
+    color: inherit;
+    text-align: inherit;
+    white-space: inherit;
+    vertical-align: inherit;
+}
+div#smbht > div#grabb_panel > div.label::before{
+    content: "\f0d0";
+}
+div#smbht.opened > div#grabb_panel > div.label::before{
+    content: "\f00d";
+}
+div#smbht > div#grabb_panel > div.panel{
+    position: relative;
+    border-bottom: 1px solid darkgray;
+    border-left: 1px solid darkgray;
+    border-top: 1px solid darkgray;
+    padding: 1em;
+    border-radius: inherit;
+    border-bottom-left-radius: 0.3em;
+    background-color: white;
+    width: 640px;
+    box-shadow: none;
+    transition: box-shadow 1s ease-out 0s;
+    margin-top: inherit;
+    z-index: 100;
+}
+div#smbht > div#grabb_panel > div.panel > div.destination-list > ul,
+div#smbht > div#grabb_panel > div.panel > div.source-list > ul{
+    display: block;
+    max-height: 160px;
+    overflow: auto;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
+    padding: 6px;
+    margin: 10px 0px;
+}
+div#smbht > div#grabb_panel > div.panel > div.destination-list > ul > li,
+div#smbht > div#grabb_panel > div.panel > div.source-list > ul > li{
+    display: block;
+    cursor: default;
+    margin-left: 24px;
+    position: relative;
+    padding: 3px;
+    transition: background-color 0.3s ease-out 0s;
+}
+div#smbht > div#grabb_panel > div.panel > div.destination-list > ul > li:hover,
+div#smbht > div#grabb_panel > div.panel > div.source-list > ul > li:hover{
+    background-color: lightgray;
+}
+div#smbht > div#grabb_panel > div.panel > div.destination-list > ul > li::before,
+div#smbht > div#grabb_panel > div.panel > div.source-list > ul > li::before{
+    font: normal normal normal 1em/1 FontAwesome;
+    content: ' ';
+    margin-right: 6px;
+    padding: 0px;
+    border: 1px solid black;
+    border-radius: 3px;
+    position: absolute;
+    left: -22px;
+    width: 20px;
+    height: 20px;
+}
+div#smbht > div#grabb_panel > div.panel > div.destination-list > ul > li.checked::before,
+div#smbht > div#grabb_panel > div.panel > div.source-list > ul > li.checked::before{
+    content: '\f00c';
+}
+div#smbht > div#grabb_panel > div.panel > div > div.header{
+    font-weight: 700;
+}
+div#smbht > div#grabb_panel > div.panel > div.splash{
+    display: none;
+}
+div#smbht > div#grabb_panel > div.panel > div.processing{
+    display: none;
+}
+div#smbht > div#grabb_panel > div.panel > div.buttons{
+    display: flex;
+    flex-direction: row-reverse;
+}
+div#smbht > div#grabb_panel > div.panel > div.buttons > button.start{
+    display: block;
+    background-color: rgb(51, 102, 255);
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 3px 9px;
+    font-size: 18px;
+    transition: background-color 0.3s ease-out 0s;
+}
+div#smbht > div#grabb_panel > div.panel > div.buttons > button.start:hover{
+    background-color: rgb(35, 70, 177);
+}
+div#smbht > div#grabb_panel > div.panel > div.processing > div.buttons{
+    display: flex;
+    flex-direction: row-reverse;
+}
+div#smbht > div#grabb_panel > div.panel > div.processing > div.buttons > button.stop{
+    display: block;
+    background-color: rgb(255, 51, 102);
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 3px 9px;
+    font-size: 18px;
+    transition: background-color 0.3s ease-out 0s;
+}
+div#smbht > div#grabb_panel > div.panel > div.processing > div.buttons > button.stop:hover{
+    background-color: rgb(177, 35, 70);
+}
+
+div#smbht > div#grabb_panel > div.panel.works > div.processing{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 6px;
+    position: absolute;
+    background-color: rgb(255, 255, 255);
+    top: 3px;
+    left: 3px;
+    right: 3px;
+    bottom: 3px;
+    z-index: 1;
+}
+div#smbht > div#grabb_panel > div.panel.loading > div.splash{
+    display: flex;
+    position: absolute;
+    background-color: rgb(255, 255, 255);
+    top: 3px;
+    left: 3px;
+    right: 3px;
+    bottom: 3px;
+}
+div#smbht > div#grabb_panel > div.panel.loading > div.splash::before{
+    font: normal normal normal 3em/1 FontAwesome;
+    content: "\f110";
+    animation: fa-spin 1s infinite steps(8);
+    margin: auto;
+}
+div#smbht.opened > div#grabb_panel > div.panel{
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 80px 0px;
+}
