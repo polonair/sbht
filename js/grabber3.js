@@ -140,46 +140,58 @@ function sendTopic(dgid, gid, pid, d, data){
 		logtype:"fetch_ok",
 		group_list: null
 	};
-	$(data.media_topics[0].media).each((key, value) => {
-		if (value.type == "text")
-		{
-			posting.Global_arrayAttachmentsOrig.push([null, null, null, "text", null, null, value.text]);
-		}
-		else if (value.type == "photo")
-		{
-			for (var j = 0; j < value.photo_refs.length; j++)
+	if (("media_topics" in data) && (data.media_topics.length > 0) && ("media" in data.media_topics[0]))
+	{
+		$(data.media_topics[0].media).each((key, value) => {
+			if (value.type == "text")
 			{
-				if("group_photos" in data.entities) {
-					//data.entities.group_photos may be 'undefined'
-					for (var i = 0; i < data.entities.group_photos.length; i++)
-					{
-						if (data.entities.group_photos[i].ref == value.photo_refs[j])
-						{
-							var big = null;
-							var small = null;
-							small = data.entities.group_photos[i].pic128x128;
-							if ("picgif" in data.entities.group_photos[i])
-							{
-								big = data.entities.group_photos[i].picgif;
-							}
-							else
-							{
-								big = data.entities.group_photos[i].pic_max;								
-							}
-							var size = data.entities.group_photos[i].standard_width+"x"+data.entities.group_photos[i].standard_height;
-							var ref = data.entities.group_photos[i].ref;
-							posting.Global_arrayAttachmentsOrig.push([ref, null, big, "photo", 0, small, size, big]);
-							break;
-						}
-					}
-				}
-				else{
+				if (value.text.search(/http/i) >= 0)
+				{
 					posting = null;
 					return false;
 				}
+				else
+				{
+					posting.Global_arrayAttachmentsOrig.push([null, null, null, "text", null, null, value.text]);
+				}
 			}
-		}
-	});
+			else if (value.type == "photo")
+			{
+				for (var j = 0; j < value.photo_refs.length; j++)
+				{
+					if("group_photos" in data.entities) {
+						//data.entities.group_photos may be 'undefined'
+						for (var i = 0; i < data.entities.group_photos.length; i++)
+						{
+							if (data.entities.group_photos[i].ref == value.photo_refs[j])
+							{
+								var big = null;
+								var small = null;
+								small = data.entities.group_photos[i].pic128x128;
+								if ("picgif" in data.entities.group_photos[i])
+								{
+									big = data.entities.group_photos[i].picgif;
+								}
+								else
+								{
+									big = data.entities.group_photos[i].pic_max;								
+								}
+								var size = data.entities.group_photos[i].standard_width+"x"+data.entities.group_photos[i].standard_height;
+								var ref = data.entities.group_photos[i].ref;
+								posting.Global_arrayAttachmentsOrig.push([ref, null, big, "photo", 0, small, size, big]);
+								break;
+							}
+						}
+					}
+					else{
+						posting = null;
+						return false;
+					}
+				}
+			}
+		});
+	}
+	else posting = null;
 
 	if (posting == null) setTimeout(() => { selectSourceGroup(); }, randomInteger(grabb.delay.min, grabb.delay.max));
 	else 
