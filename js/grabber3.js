@@ -102,9 +102,21 @@ function loadStream(gid)
 		}
 	}).done((data) => {
 		data = JSON.parse(data);
-		$.each(data.entities.media_topics, (key, value) => { grabb.source[gid].posts.push(value.id); });
-		grabb.source[gid].anchor = data.anchor;
-		selectPost(gid);
+
+		if (("entities" in data) && ("media_topics" in data.entities))
+		{
+			$.each(data.entities.media_topics, (key, value) => { grabb.source[gid].posts.push(value.id); });
+			grabb.source[gid].anchor = data.anchor;
+			selectPost(gid);
+		}
+		else
+		{
+    		console.log(`пропускаем загрузку стрима для ${gid}...`);
+			if (grabb.state == "works") 
+				setTimeout(() => { selectSourceGroup(); }, randomInteger(grabb.delay.min, grabb.delay.max));
+			else 
+				unlockLayout();
+		}
 	});
 }
 function loadCalendar(dgid, gid, pid){
